@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Efectivo P2P",
-    "slug": "efectivo-p2p",
+    "name": "Dollar Swap",
+    "slug": "dollar-swap",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,7 +13,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "package": "com.tuempresa.efectivop2p",
+      "package": "com.tuempresa.dollarsawp",
       "versionCode": 1,
       "permissions": [
         "android.permission.CAMERA",
@@ -25,8 +25,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "La aplicación necesita acceso a tu galería para seleccionar fotos de billetes.",
-          "cameraPermission": "La aplicación necesita acceso a tu cámara para tomar fotos de billetes."
+          "photosPermission": "Dollar Swap necesita acceso a tu galería para seleccionar fotos de billetes.",
+          "cameraPermission": "Dollar Swap necesita acceso a tu cámara para tomar fotos de billetes."
         }
       ],
       [
