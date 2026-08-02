@@ -1,5 +1,5 @@
 {
-  "name": "efectivo-p2p-app",
+  "name": "dollar-swap",
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
