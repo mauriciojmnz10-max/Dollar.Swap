@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Efectivo P2P",
+    "slug": "efectivo-p2p",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2563EB"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "com.tuempresa.efectivop2p",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.INTERNET"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "La aplicación necesita acceso a tu galería para seleccionar fotos de billetes.",
+          "cameraPermission": "La aplicación necesita acceso a tu cámara para tomar fotos de billetes."
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Permite usar Face ID para acceder a tus datos seguros."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "TU_PROJECT_ID_DE_EAS"
+      }
+    }
+  }
+}
