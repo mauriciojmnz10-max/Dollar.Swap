@@ -2,6 +2,7 @@
   "expo": {
     "name": "Dollar Swap",
     "slug": "dollar-swap",
+    "owner": "mjghostves-team",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
