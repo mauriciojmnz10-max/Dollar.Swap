@@ -28,7 +28,7 @@
     "react-native-screens": "~3.29.0",
     "@sentry/react-native": "~5.13.0",
     "@react-native-community/netinfo": "11.1.0",
-    "expo-linking": "~6.2.0",
+    "expo-linking": "~6.2.0"
   }
   "devDependencies": {
     "@babel/core": "^7.20.0"
