@@ -19,7 +19,7 @@
       "node": "20.0.0",
       "autoIncrement": true,
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "apk"
       },
       "credentialsSource": "remote"
     }
