@@ -13,7 +13,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "android": {
-      "package": "com.tuempresa.dollarsawp",
+      "package": "dollar.sawp",
       "versionCode": 1,
       "permissions": [
         "android.permission.CAMERA",
@@ -37,8 +37,9 @@
       ]
     ],
     "extra": {
-  "eas": {
-    "projectId": "4c0f8fb4-bdb4-4fde-a368-4935a82d2112"
+      "eas": {
+        "projectId": "4c0f8fb4-bdb4-4fde-a368-4935a82d2112"
+      }
+    }
   }
-}
 }
