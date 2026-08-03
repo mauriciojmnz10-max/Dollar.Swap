@@ -4,19 +4,19 @@
   },
   "build": {
     "development": {
-      "node": "20.x",
+      "node": "20",
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
-      "node": "20.x",
+      "node": "20",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
-      "node": "20.x",
+      "node": "20",
       "autoIncrement": true,
       "android": {
         "buildType": "app-bundle"
