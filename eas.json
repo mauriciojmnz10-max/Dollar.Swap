@@ -4,19 +4,16 @@
   },
   "build": {
     "development": {
-      "node": "lts",
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
-      "node": "lts",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
-      "node": "lts",
       "autoIncrement": true,
       "android": {
         "buildType": "apk"
