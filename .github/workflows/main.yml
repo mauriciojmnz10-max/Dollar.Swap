@@ -1,49 +1,77 @@
 import os
-import hmac
-import hashlib
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse
+import requests
+from fastapi import FastAPI, HTTPException
+from dotenv import load_dotenv
 
-app = FastAPI()
+load_dotenv()
 
-APP_SECRET = os.environ.get("BITLABS_APP_SECRET")
+app = FastAPI(title="Viral Script Bot API", version="2.0")
 
-@app.get("/callback")
-async def bitlabs_callback(request: Request):
-    if not APP_SECRET:
-        raise HTTPException(status_code=500, detail="Secreto no configurado")
-
-    # URL completa tal cual llegó (incluye query string)
-    url_completa = str(request.url)
-
-    # BitLabs siempre añade &hash=... al final
-    if "&hash=" not in url_completa:
-        raise HTTPException(status_code=400, detail="Falta el hash")
-
-    url_sin_hash, hash_recibido = url_completa.split("&hash=", 1)
-
-    # HMAC-SHA1 sobre la URL SIN el hash
-    firma_esperada = hmac.new(
-        APP_SECRET.encode("utf-8"),
-        url_sin_hash.encode("utf-8"),
-        hashlib.sha1
-    ).hexdigest()
-
-    if not hmac.compare_digest(firma_esperada, hash_recibido):
-        raise HTTPException(status_code=403, detail="Firma inválida")
-
-    params = request.query_params
-    return JSONResponse(
-        status_code=200,
-        content={
-            "status": "ok",
-            "uid": params.get("uid"),
-            "tx": params.get("tx"),
-            "val": params.get("val"),
-            "debug": params.get("debug", "false")
-        }
-    )
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 @app.get("/")
-async def health():
-    return {"status": "alive"}
+def read_root():
+    return {"status": "Bot de guiones virales activo y operativo"}
+
+@app.post("/generar-tendencias")
+def disparar_generador_guiones():
+    """Endpoint para activar la búsqueda de los 3 nichos más virales del día y enviarlos a Telegram."""
+    if not GROQ_API_KEY or not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        raise HTTPException(
+            status_code=500, 
+            detail="Faltan variables de entorno (GROQ_API_KEY, TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID)."
+        )
+    
+    # 1. Consultar a la IA (Groq) por las tendencias y guiones del día
+    url_groq = "https://api.groq.com/openai/v1/chat/completions"
+    headers_groq = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    prompt = (
+        "Actúa como un experto en marketing digital, algoritmos de TikTok, Instagram Reels y YouTube Shorts. "
+        "Analiza las tendencias actuales globales y determina cuáles son los 3 nichos y temas más explosivos, virales y de mayor retención para hoy "
+        "(pueden ser de cualquier categoría: datos curiosos, tecnología, cocina, misterio, finanzas, videos infantiles, etc., pero que sean diferentes entre sí). "
+        "Para cada uno de los 3 temas, genera un guion completo de entre 30 y 45 segundos optimizado para formato vertical. "
+        "El guion debe incluir obligatoriamente: "
+        "1. Un gancho visual y auditivo demoledor en los primeros 3 segundos. "
+        "2. El cuerpo dinámico estructurado en frases cortas (perfectas para subtítulos automáticos). "
+        "3. Un llamado a la acción al final. "
+        "Devuelve la respuesta estructurada claramente por Tema 1, Tema 2 y Tema 3."
+    )
+
+    payload_groq = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.7
+    }
+
+    try:
+        response_groq = requests.post(url_groq, json=payload_groq, headers=headers_groq)
+        response_groq.raise_for_status()
+        data_groq = response_groq.json()
+        guiones_generados = data_groq["choices"][0]["message"]["content"]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al conectar con la IA de Groq: {str(e)}")
+
+    # 2. Enviar el resultado directamente a Telegram
+    url_telegram = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload_telegram = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": f"🚀 *TENDENCIAS Y GUIONES VIRALES DE HOY*\n\n{guiones_generados}",
+        "parse_mode": "Markdown"
+    }
+
+    try:
+        response_telegram = requests.post(url_telegram, json=payload_telegram)
+        response_telegram.raise_for_status()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al enviar el mensaje a Telegram: {str(e)}")
+
+    return {
+        "status": "success",
+        "message": "Tendencias y guiones generados y enviados a Telegram exitosamente"
+    }
